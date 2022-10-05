@@ -11,9 +11,9 @@ export const animations = {
             fill: negative ? 0xffffff : 0x95ed98,
             dropShadowColor: 0x0,
             dropShadowAlpha: 1,
-            fontStyle: 'bold',
-            font: 'Verdana',
-            fontSize: 'medium',
+            fontWeight: 'bold',
+            fontFamily: 'Verdana',
+            fontSize: 28,
         };
         const style = PreciseText.getTextStyle({ anchor, ...textStyle });
         const text = scrollingText.addChild(new PreciseText(content, style));
