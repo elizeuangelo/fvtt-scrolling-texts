@@ -14,10 +14,15 @@ export const animations = {
 			duration = 2000,
 			jitter = 0,
 			textStyle = {
-				fontSize: 28,
+				//fontSize: 28,
 				stroke: 0x000000,
-				strokeThickness: 4,
-				fill: negative ? 0xffffff : 0x22ff22,
+				strokeThickness: 5,
+				fill: negative ? 0xffffff : 0x95ed98,
+				dropShadowColor: 0x0,
+				dropShadowAlpha: 1,
+				fontStyle: 'bold',
+				font: 'Verdana',
+				fontSize: 'medium',
 			};
 
 		// Create text object
