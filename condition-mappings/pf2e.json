@@ -3,7 +3,7 @@
 	"broken": ["#fce1e4", "#faf8f6"],
 	"clumsy": ["#fce1e4", "#faf8f6"],
 	"concealed": ["#ddedea", "#faf8f6"],
-	"confused": ["#fce1e4", "#ddedea", "sounds/dice.wav", "sounds/dice.wav"],
+	"confused": ["#fce1e4", "#ddedea"],
 	"controlled": ["#fce1e4", "#ddedea"],
 	"dazzled": ["#fce1e4", "#faf8f6"],
 	"deafened": ["#fce1e4", "#ddedea"],
