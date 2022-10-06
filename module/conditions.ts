@@ -4,6 +4,7 @@ import CustomFilePicker from '../libs/CustomFilePìcker.js';
 const conditionMaps = {
 	none: {},
 	dnd5e: await (await fetch('/modules/' + MODULE + '/condition-mappings/dnd5e.json')).json(),
+	pf2e: await (await fetch('/modules/' + MODULE + '/condition-mappings/pf2e.json')).json(),
 	custom: {},
 };
 

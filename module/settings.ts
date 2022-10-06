@@ -1,4 +1,4 @@
-import { updateScrollingAnimation } from './animations.js';
+import { setDisplay, updateScrollingAnimation } from './animations.js';
 import CustomFilePicker from '../libs/CustomFilePìcker.js';
 import { getCustomMap } from './conditions.js';
 
@@ -43,6 +43,7 @@ export function registerSettings() {
 		choices: {
 			none: 'None',
 			dnd5e: 'DnD 5e',
+			pf2e: 'Pathfinder 2e',
 			custom: 'Custom',
 		},
 		default: 'none',
@@ -54,5 +55,11 @@ export function registerSettings() {
 		type: CustomFilePicker.FilePicker,
 		default: '',
 		onChange: (value) => getCustomMap(value),
+	});
+	game.settings.register(MODULE, 'text-display', {
+		config: false,
+		type: Boolean,
+		default: true,
+		onChange: (value) => setDisplay(value),
 	});
 }

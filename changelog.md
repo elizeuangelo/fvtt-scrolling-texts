@@ -1,5 +1,11 @@
 # Patch Notes
 
+## v1.14
+
+-   Added PF2e condition map
+-   Added Sound FX
+-   Added keybinding
+
 ## v1.13
 
 -   Created condition mapping settings (beta)
