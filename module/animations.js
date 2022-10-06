@@ -1,33 +1,41 @@
+import { getMap } from './conditions.js';
 import { MODULE } from './settings.js';
+import { getActorAttribute } from './utils.js';
 let scrollingText;
 Hooks.once('ready', () => (scrollingText = canvas.interface.getChildAt(10)));
 export const animations = {
     standard: undefined,
     oldrpg: async function (origin, content) {
+        const isNumber = !Number.isNaN(+content);
         const negative = content[0] === '-';
         content = content.slice(1);
-        const fontSize = game.settings.get(MODULE, 'font-size');
-        const anchor = 1, duration = 2000, textStyle = {
+        const token = canvas.tokens.objects.children.find((t) => t.center.x === origin.x && t.center.y === origin.y);
+        const hpMult = Math.clamped(isNumber ? +content / (getActorAttribute(token.actor, 'hpmax') / 5) : 1, 1, 2);
+        const fontSize = game.settings.get(MODULE, 'font-size') * (canvas.scene.grid.size / 100) * hpMult;
+        const duration = 2000, textStyle = {
             stroke: 0x000000,
             strokeThickness: 5,
             fill: negative ? 0xffffff : 0x95ed98,
-            dropShadowColor: 0x0,
+            dropShadowColor: 0,
             dropShadowAlpha: 1,
             fontWeight: 'bold',
             fontFamily: 'Verdana',
             fontSize,
         };
-        const style = PreciseText.getTextStyle({ anchor, ...textStyle });
+        if (!isNumber) {
+            const map = getMap();
+            const regex = /\((.+)\)/;
+            const match = regex.exec(content)?.[1];
+            content = match;
+            const colors = map[match?.toLowerCase()];
+            if (colors)
+                textStyle.fill = +Color.fromString(colors[+negative] ?? colors[0]);
+        }
+        const style = PreciseText.getTextStyle({ ...textStyle });
         const text = scrollingText.addChild(new PreciseText(content, style));
         text.visible = false;
-        text.position.set(origin.x, origin.y + 18 - fontSize);
-        text.anchor.set(...{
-            [CONST.TEXT_ANCHOR_POINTS.CENTER]: [0.5, 0.5],
-            [CONST.TEXT_ANCHOR_POINTS.BOTTOM]: [0.5, 0],
-            [CONST.TEXT_ANCHOR_POINTS.TOP]: [0.5, 1],
-            [CONST.TEXT_ANCHOR_POINTS.LEFT]: [1, 0.5],
-            [CONST.TEXT_ANCHOR_POINTS.RIGHT]: [0, 0.5],
-        }[anchor ?? CONST.TEXT_ANCHOR_POINTS.CENTER]);
+        text.anchor.set(0.5, 0.5);
+        text.position.set(origin.x, origin.y - 10);
         await CanvasAnimation.animate([
             { parent: text, attribute: 'alpha', from: 0, to: 1.0 },
             { parent: text.scale, attribute: 'x', from: 0.6, to: 1.0 },
@@ -39,13 +47,13 @@ export const animations = {
             easing: undefined,
             ontick: () => (text.visible = true),
         });
-        await CanvasAnimation.animate([{ parent: text, attribute: 'y', to: text.position.y + -30 }], {
+        await CanvasAnimation.animate([{ parent: text, attribute: 'y', to: text.position.y - fontSize }], {
             context: this,
             duration: duration * 0.05,
             easing: undefined,
             ontick: () => (text.visible = true),
         });
-        await CanvasAnimation.animate([{ parent: text, attribute: 'y', to: text.position.y + 30 }], {
+        await CanvasAnimation.animate([{ parent: text, attribute: 'y', to: text.position.y + fontSize }], {
             context: this,
             duration: duration * 0.05,
             easing: undefined,

@@ -1,5 +1,9 @@
 # Patch Notes
 
+## v1.13
+
+-   Created condition mapping settings (beta)
+
 ## v1.12
 
 -   Adjusted padding on top of healthbar

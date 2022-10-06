@@ -1,4 +1,6 @@
+import { getMap } from './conditions.js';
 import { MODULE } from './settings.js';
+import { getActorAttribute } from './utils.js';
 
 let scrollingText: any;
 Hooks.once('ready', () => (scrollingText = canvas.interface!.getChildAt(10)));
@@ -6,42 +8,47 @@ Hooks.once('ready', () => (scrollingText = canvas.interface!.getChildAt(10)));
 export const animations = {
 	standard: undefined,
 	oldrpg: async function (this: InterfaceCanvasGroup, origin, content) {
+		const isNumber = !Number.isNaN(+content);
 		const negative = content[0] === '-';
 		content = content.slice(1);
 
-		const fontSize = game.settings.get(MODULE, 'font-size') as number;
+		const token = canvas!.tokens!.objects!.children.find((t: any) => t.center.x === origin.x && t.center.y === origin.y) as any;
+		const hpMult = Math.clamped(isNumber ? +content / (getActorAttribute(token.actor, 'hpmax') / 5) : 1, 1, 2);
 
-		const anchor = 1,
-			duration = 2000,
+		const fontSize = (game.settings.get(MODULE, 'font-size') as number) * (canvas.scene!.grid.size / 100) * hpMult;
+
+		const duration = 2000,
 			textStyle = {
 				stroke: 0x000000,
 				strokeThickness: 5,
 				fill: negative ? 0xffffff : 0x95ed98,
-				dropShadowColor: 0x0,
+				dropShadowColor: 0,
 				dropShadowAlpha: 1,
 				fontWeight: 'bold',
 				fontFamily: 'Verdana',
 				fontSize,
 			};
 
+		if (!isNumber) {
+			const map = getMap();
+			const regex = /\((.+)\)/;
+			const match = regex.exec(content)?.[1];
+			content = match;
+			const colors = map[match?.toLowerCase()];
+			//@ts-ignore
+			if (colors) textStyle.fill = +Color.fromString(colors[+negative] ?? colors[0]);
+		}
+
 		// Create text object
-		const style = PreciseText.getTextStyle({ anchor, ...textStyle });
+		const style = PreciseText.getTextStyle({ ...textStyle });
 		const text = scrollingText.addChild(new PreciseText(content, style));
 		text.visible = false;
 
-		// Set initial coordinates
-		text.position.set(origin.x, origin.y + 18 - fontSize);
-
 		// Configure anchor point
-		text.anchor.set(
-			...{
-				[CONST.TEXT_ANCHOR_POINTS.CENTER]: [0.5, 0.5],
-				[CONST.TEXT_ANCHOR_POINTS.BOTTOM]: [0.5, 0],
-				[CONST.TEXT_ANCHOR_POINTS.TOP]: [0.5, 1],
-				[CONST.TEXT_ANCHOR_POINTS.LEFT]: [1, 0.5],
-				[CONST.TEXT_ANCHOR_POINTS.RIGHT]: [0, 0.5],
-			}[anchor ?? CONST.TEXT_ANCHOR_POINTS.CENTER]
-		);
+		text.anchor.set(0.5, 0.5);
+
+		// Set initial coordinates
+		text.position.set(origin.x, origin.y - 10);
 
 		// Position Text
 		await CanvasAnimation.animate(
@@ -59,14 +66,14 @@ export const animations = {
 			}
 		);
 
-		await CanvasAnimation.animate([{ parent: text, attribute: 'y', to: text.position.y + -30 }], {
+		await CanvasAnimation.animate([{ parent: text, attribute: 'y', to: text.position.y - fontSize }], {
 			context: this,
 			duration: duration * 0.05,
 			easing: undefined,
 			ontick: () => (text.visible = true),
 		});
 
-		await CanvasAnimation.animate([{ parent: text, attribute: 'y', to: text.position.y + 30 }], {
+		await CanvasAnimation.animate([{ parent: text, attribute: 'y', to: text.position.y + fontSize }], {
 			context: this,
 			duration: duration * 0.05,
 			easing: undefined,
