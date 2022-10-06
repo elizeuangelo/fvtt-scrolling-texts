@@ -1,3 +1,5 @@
+import { MODULE } from './settings.js';
+
 let scrollingText: any;
 Hooks.once('ready', () => (scrollingText = canvas.interface!.getChildAt(10)));
 
@@ -7,12 +9,10 @@ export const animations = {
 		const negative = content[0] === '-';
 		content = content.slice(1);
 
+		const fontSize = game.settings.get(MODULE, 'font-size') as number;
+
 		const anchor = 1,
-			distance = undefined,
-			//@ts-ignore
-			direction = CONST.TEXT_ANCHOR_POINTS.TOP as CONST.TEXT_ANCHOR_POINTS,
 			duration = 2000,
-			jitter = 0,
 			textStyle = {
 				stroke: 0x000000,
 				strokeThickness: 5,
@@ -21,7 +21,7 @@ export const animations = {
 				dropShadowAlpha: 1,
 				fontWeight: 'bold',
 				fontFamily: 'Verdana',
-				fontSize: 28,
+				fontSize,
 			};
 
 		// Create text object
@@ -30,9 +30,7 @@ export const animations = {
 		text.visible = false;
 
 		// Set initial coordinates
-		const jx = (jitter ? (Math.random() - 0.5) * jitter : 0) * text.width;
-		const jy = (jitter ? (Math.random() - 0.5) * jitter : 0) * text.height;
-		text.position.set(origin.x + jx, origin.y + jy);
+		text.position.set(origin.x, origin.y + 18 - fontSize);
 
 		// Configure anchor point
 		text.anchor.set(
@@ -44,24 +42,6 @@ export const animations = {
 				[CONST.TEXT_ANCHOR_POINTS.RIGHT]: [0, 0.5],
 			}[anchor ?? CONST.TEXT_ANCHOR_POINTS.CENTER]
 		);
-
-		// Configure animation distance
-		let dx = 0;
-		let dy = 0;
-		switch (direction ?? CONST.TEXT_ANCHOR_POINTS.TOP) {
-			case CONST.TEXT_ANCHOR_POINTS.BOTTOM:
-				dy = distance ?? 2 * text.height;
-				break;
-			case CONST.TEXT_ANCHOR_POINTS.TOP:
-				dy = -1 * (distance ?? 2 * text.height);
-				break;
-			case CONST.TEXT_ANCHOR_POINTS.LEFT:
-				dx = -1 * (distance ?? 2 * text.width);
-				break;
-			case CONST.TEXT_ANCHOR_POINTS.RIGHT:
-				dx = distance ?? 2 * text.width;
-				break;
-		}
 
 		// Position Text
 		await CanvasAnimation.animate(

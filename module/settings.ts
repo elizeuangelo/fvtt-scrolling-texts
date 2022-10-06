@@ -17,4 +17,18 @@ export function registerSettings() {
 		default: 'standard',
 		onChange: updateScrollingAnimation,
 	});
+	game.settings.register(MODULE, 'font-size', {
+		name: 'Font Size',
+		hint: 'Sets the font size.',
+		scope: 'world',
+		config: true,
+		type: Number,
+		//@ts-ignore
+		range: {
+			min: 12,
+			max: 48,
+			step: 1,
+		},
+		default: 28,
+	});
 }
