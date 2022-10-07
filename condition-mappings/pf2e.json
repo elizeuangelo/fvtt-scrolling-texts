@@ -35,5 +35,5 @@
 	"wounded": ["#e89e9c", "#9de89f"],
 	"undetected": ["#9cc0e8", "#faf8f6"],
 	"in darkness": ["#e6e89c", null],
-	"in dim light": ["#e6e89c", null]
+	"dimly lit": ["#e6e89c", null]
 }

@@ -16,8 +16,12 @@ export const animations = {
         const token = canvas.tokens.objects.children.find((t) => t.center.x === origin.x && t.center.y === origin.y);
         const hpmax = getActorAttribute(token.actor, 'hpmax');
         let hpMult = 1;
-        if (hpmax)
-            hpMult = Math.clamped(isNumber ? (5 * +content) / hpmax : 1, 1, 2);
+        if (hpmax && isNumber) {
+            const hp_min = (+game.settings.get(MODULE, 'minimum-size-hp-linear') * hpmax) / 100;
+            const hp_max = (+game.settings.get(MODULE, 'maximum-size-hp-linear') * hpmax) / 100;
+            const range = hp_max - hp_min;
+            hpMult += Math.clamped((+content - hp_min) / range, 0, 1);
+        }
         const fontSize = game.settings.get(MODULE, 'font-size') * (canvas.scene.grid.size / 100) * hpMult;
         const duration = 2000, textStyle = {
             stroke: 0x000000,
@@ -34,7 +38,7 @@ export const animations = {
             const regex = /^[ \(\+\-]{0,2}(([a-z- ]+)[0-9]*)/i;
             const match = regex.exec(content);
             if (match) {
-                content = (negative ? '- ' : '') + match[1];
+                content = (negative ? '-' : '') + match[1];
                 if (match[2][match[2].length - 1] === ' ')
                     match[2] = match[2].slice(0, match[2].length - 1);
                 const colors = map[match[2]?.toLowerCase()];

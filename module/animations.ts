@@ -17,7 +17,13 @@ export const animations = {
 		const token = canvas!.tokens!.objects!.children.find((t: any) => t.center.x === origin.x && t.center.y === origin.y) as any;
 		const hpmax = getActorAttribute(token.actor, 'hpmax') as number | undefined;
 		let hpMult = 1;
-		if (hpmax) hpMult = Math.clamped(isNumber ? (5 * +content) / hpmax : 1, 1, 2);
+		if (hpmax && isNumber) {
+			const hp_min = (+(<string>game.settings.get(MODULE, 'minimum-size-hp-linear')) * hpmax) / 100;
+			const hp_max = (+(<string>game.settings.get(MODULE, 'maximum-size-hp-linear')) * hpmax) / 100;
+			const range = hp_max - hp_min;
+			hpMult += Math.clamped((+content - hp_min) / range, 0, 1);
+		}
+		//if (hpmax) hpMult = Math.clamped(isNumber ? (5 * +content) / hpmax : 1, 1, 2);
 
 		const fontSize = (game.settings.get(MODULE, 'font-size') as number) * (canvas.scene!.grid.size / 100) * hpMult;
 
@@ -38,7 +44,7 @@ export const animations = {
 			const regex = /^[ \(\+\-]{0,2}(([a-z- ]+)[0-9]*)/i;
 			const match = regex.exec(content);
 			if (match) {
-				content = (negative ? '- ' : '') + match[1];
+				content = (negative ? '-' : '') + match[1];
 				if (match[2][match[2].length - 1] === ' ') match[2] = match[2].slice(0, match[2].length - 1);
 				const colors = map[match[2]?.toLowerCase()];
 

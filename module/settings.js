@@ -29,6 +29,32 @@ export function registerSettings() {
         },
         default: 28,
     });
+    game.settings.register(MODULE, 'minimum-size-hp-linear', {
+        name: 'Font Size - Max HP Linear (minimum)',
+        hint: 'The % of maximum HP wich the font size will start enlarging.',
+        scope: 'world',
+        config: true,
+        type: Number,
+        range: {
+            min: 0,
+            max: 100,
+            step: 1,
+        },
+        default: 20,
+    });
+    game.settings.register(MODULE, 'maximum-size-hp-linear', {
+        name: 'Font Size - Max HP Linear (maximum)',
+        hint: 'The % of maximum HP wich the font will double in size.',
+        scope: 'world',
+        config: true,
+        type: Number,
+        range: {
+            min: 0,
+            max: 100,
+            step: 1,
+        },
+        default: 40,
+    });
     game.settings.register(MODULE, 'condition-map', {
         name: 'Condition Color Map',
         hint: 'Chooses a map for condition coloring.',
