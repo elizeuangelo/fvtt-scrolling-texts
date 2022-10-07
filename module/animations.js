@@ -9,7 +9,10 @@ export const animations = {
     oldrpg: async function (origin, content) {
         const isNumber = !Number.isNaN(+content);
         const negative = content[0] === '-';
-        content = content.slice(1);
+        if (content[0] === '-')
+            content = content.slice(1);
+        else if (content[0] === '+')
+            content = content.slice(1);
         const token = canvas.tokens.objects.children.find((t) => t.center.x === origin.x && t.center.y === origin.y);
         const hpmax = getActorAttribute(token.actor, 'hpmax');
         let hpMult = 1;
@@ -28,20 +31,22 @@ export const animations = {
         };
         if (!isNumber) {
             const map = getMap();
-            const regex = / ?([a-z- ]+)/i;
-            let match = regex.exec(content)?.[1];
-            if (match[match.length - 1] === ' ')
-                match = match.slice(0, match.length - 1);
-            content = match;
-            const colors = map[match?.toLowerCase()];
-            if (colors) {
-                if (colors[+negative] === null)
-                    return;
-                textStyle.fill = +Color.fromString(colors[+negative] ?? colors[0]);
-                if (colors[2] && !negative)
-                    await new Audio(colors[2]).play();
-                if (colors[3] && negative)
-                    await new Audio(colors[3]).play();
+            const regex = /^[ \(\+\-]{0,2}(([a-z- ]+)[0-9]*)/i;
+            const match = regex.exec(content);
+            if (match) {
+                content = (negative ? '- ' : '') + match[1];
+                if (match[2][match[2].length - 1] === ' ')
+                    match[2] = match[2].slice(0, match[2].length - 1);
+                const colors = map[match[2]?.toLowerCase()];
+                if (colors) {
+                    if (colors[+negative] === null)
+                        return;
+                    textStyle.fill = +Color.fromString(colors[+negative] ?? colors[0]);
+                    if (colors[2] && !negative)
+                        await new Audio(colors[2]).play();
+                    if (colors[3] && negative)
+                        await new Audio(colors[3]).play();
+                }
             }
         }
         const style = PreciseText.getTextStyle({ ...textStyle });
