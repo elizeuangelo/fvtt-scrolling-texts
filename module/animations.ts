@@ -41,6 +41,7 @@ export const animations = {
 			const colors = map[match?.toLowerCase()];
 
 			if (colors) {
+				if (colors[+negative] === null) return;
 				//@ts-ignore
 				textStyle.fill = +Color.fromString(colors[+negative] ?? colors[0]);
 

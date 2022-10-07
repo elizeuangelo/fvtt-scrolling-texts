@@ -35,6 +35,8 @@ export const animations = {
             content = match;
             const colors = map[match?.toLowerCase()];
             if (colors) {
+                if (colors[+negative] === null)
+                    return;
                 textStyle.fill = +Color.fromString(colors[+negative] ?? colors[0]);
                 if (colors[2] && !negative)
                     await new Audio(colors[2]).play();
