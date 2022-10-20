@@ -4,7 +4,7 @@ Use these premade maps in this folder as examples or templates to make your own 
 
 ## Interface
 
-The map inferface is a record where the condition name matches an array containing:
+The map inferface is a record where the condition name (in lowercase) matches an array containing:
 
 ```
 [
