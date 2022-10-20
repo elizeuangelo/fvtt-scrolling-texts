@@ -19,9 +19,9 @@ Example:
 
 ```
 {
-    Argh: ["#0"],
-    Blah: ["#0", "#ff"],
-    Fear: ["#ff00ff", "#00ff00", "./sounds/dice.wav"]
-    Confused: ["#ff00ff", "#00ff00", "./sounds/dice.wav", "./sounds/lock.wav"]
+    argh: ["#0"],
+    blah: ["#0", "#ff"],
+    fear: ["#ff00ff", "#00ff00", "./sounds/dice.wav"]
+    confused: ["#ff00ff", "#00ff00", "./sounds/dice.wav", "./sounds/lock.wav"]
 }
 ```
