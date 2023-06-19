@@ -2,7 +2,7 @@
 	"id": "scrolling-texts",
 	"title": "Scrolling Texts",
 	"description": "Changes the scrolling text animation",
-	"version": "1.15",
+	"version": "1.18",
 	"author": ["elizeuangelo"],
 	"esmodules": ["./main.js"],
 	"compatibility": {

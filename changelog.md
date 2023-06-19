@@ -1,6 +1,6 @@
 # Patch Notes
 
-## v1.15
+## v1.18
 
 -   Compatible with Foundry v11
 
