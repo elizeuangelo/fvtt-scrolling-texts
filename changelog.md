@@ -1,5 +1,9 @@
 # Patch Notes
 
+## v1.15
+
+-   Compatible with Foundry v11
+
 ## v1.14
 
 -   Added PF2e condition map

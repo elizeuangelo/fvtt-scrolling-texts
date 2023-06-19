@@ -11,6 +11,5 @@ Hooks.once('ready', () => {
     animations.standard = canvas.interface.createScrollingText;
     if (game.user.isGM)
         game.settings.set(MODULE, 'text-display', true);
-    else
-        setDisplay(game.settings.get(MODULE, 'text-display'));
+    setDisplay(game.settings.get(MODULE, 'text-display'));
 });
